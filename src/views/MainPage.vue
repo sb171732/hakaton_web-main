@@ -3,7 +3,7 @@
         <h3 class="w3-margin">Выберите дату чтобы посмотреть меню</h3>
         <el-date-picker
             v-model="sel_date"
-            format="dd.MM.yyyy"
+           
             type="date"
             placeholder="Выбрать">
         </el-date-picker>
