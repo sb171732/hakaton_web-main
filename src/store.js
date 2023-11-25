@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { vuexfireMutations, firestoreAction, firebaseAction } from 'vuexfire'
 import { db } from './db'
 import firebase from 'firebase/app'
+import fb from 'firebase'
 
 Vue.use(Vuex);
 
@@ -10,18 +11,27 @@ export const store = new Vuex.Store({
     state: {
         food_provider:[],  // переменные , данные , состояние 
         teachers:[],
+        subCollection: [],
         menu:[],
+        admin:[],
         user:null
     },
     mutations: {
         ...vuexfireMutations,  // мутации изменяют state если происходят action
         SET_USER(state, user) {
             state.user = user
+          },
+        SET_SubMenu(state, smenu) {
+            state.subCollection = smenu
           }
     },
     actions: {
-        bindFP: firestoreAction(({ bindFirestoreRef }) => {
-            return bindFirestoreRef('food_provider', db.collection('foodprovider'))
+      bindSubCollection: firestoreAction(({ bindFirestoreRef },payload) => {
+        // Replace 'collectionId' and 'subCollectionId' with your actual collection and sub-collection IDs respectively
+        return bindFirestoreRef('subCollection', db.collection('menu').doc(payload).collection('menu'))
+      }),
+        bindAdmins: firestoreAction(({ bindFirestoreRef }) => {
+            return bindFirestoreRef('admin', db.collection('admin'))
         }), // 
         bindMenu: firestoreAction(({ bindFirestoreRef }) => {
             return bindFirestoreRef('menu', db.collection('menu'))
@@ -29,7 +39,13 @@ export const store = new Vuex.Store({
         bindTeachers: firestoreAction(({ bindFirestoreRef }) => {
             return bindFirestoreRef('teachers', db.collection('teachers'))
         }), // 
-
+        // Firestore.instance.collection('users').document(user.uid)
+        // .collection('votes').document(vote)
+        // .setData({/* ... */});
+        addSubMenu: firestoreAction((context, {id,payload}) => {
+            return db.collection('menu').doc(id).collection('menu').
+            add(payload)
+        }),
         addFP: firestoreAction((context, payload) => {
             return db.collection('foodprovider').add(payload)
         }),
@@ -42,11 +58,45 @@ export const store = new Vuex.Store({
         delMenu: firestoreAction((context, payload) => {
             return db.collection('menu').doc(payload).delete()
         }),
+        delSubMenu: firestoreAction((context, {docId, subdocID}) => {
+            return db.collection('menu').doc(docId)
+            .collection('menu').doc(subdocID)
+            .delete()
+        }),
         updateZag: firestoreAction((context, {id, doc}) => {
             db.collection('zagadki')
                 .doc(id)
                 .update(doc)
         }),
+       async signIn(context,{email, password}){
+          console.log(email)
+          console.log(password)
+          const promise = await fb.auth().createUserWithEmailAndPassword(email, password);
+          if (promise){
+            store.commit('SET_USER', promise.user)
+          } else{
+            throw new Error('error')
+          }
+        },
+       async login(context,{email, password}){
+          console.log(email)
+          console.log(password)
+          const promise = await fb.auth().signInWithEmailAndPassword(email, password);
+          if (promise){
+            store.commit('SET_USER', promise.user)
+          } else{
+            throw new Error('error')
+          }
+        },
+        async signout(){
+          fb.auth().signOut();
+          store.commit('SET_USER',null)
+        }
+        ,
+        async emailverif(){
+          store.state.user.sendEmailVerification()
+        }
+        ,
         setUserRef: firebaseAction(({ bindFirebaseRef }, ref) => {
             bindFirebaseRef('user', ref)
           }),
@@ -55,8 +105,8 @@ export const store = new Vuex.Store({
             firebase.auth().onAuthStateChanged(function(user) {
               if (user) {
                 vm.user = user
-                commit('getUserInfo',user)
-                console.log("// User is signed in by Phone Number : ", user.phoneNumber)
+                commit('SET_USER',user)
+                console.log("// User is signed in by email : ", user.email)
               } else {
                 vm.user = null
                 console.log("// No user is signed in.")
@@ -80,5 +130,5 @@ export const store = new Vuex.Store({
 
 
 
-store.dispatch('bindFP')
+store.dispatch('bindAdmin')
 store.dispatch('bindMenu')

@@ -9,8 +9,12 @@
         <hr>
       </el-col>
       <span v-if="user!=null">
-         <h4>Выполнен вход с email: {{ user.email }} </h4>
-         <span v-if="user.emailVerified!=true">но Email не верифицирован</span> 
+         <div v-if="user.emailVerified!=true">
+            <h4>Выполнен вход с email: {{ user.email }} </h4>
+            <span >но Email не верифицирован</span> 
+            <br>
+            <b>Пожалуйста подтвердите email!</b>
+         </div>
       </span>
       
     </div>
@@ -37,8 +41,11 @@ export default{
           if(this.user.emailVerified) {
             this.$router.push('/admin')
           } else {
-            store.dispatch('emailverif')
-            this.$router.push('/verif')
+            this.$message({
+              showClose: true,
+              message: 'Email не верифицирован',
+              type: 'warning'
+            });
           }
         }
         
@@ -88,14 +95,18 @@ export default{
  async created(){
    const curr_user = await store.state.user
    if (curr_user!=null) 
-      if(this.user.emailVerified) {
+      if(curr_user.emailVerified) {
                 this.$router.push('/admin')
               } else {
-                this.$message({
-                  showClose: true,
-                  message: 'Email не верифицирован',
-                  type: 'warning'
-                });
+                if (curr_user.sendEmailVerification()) {
+                    this.$message({
+                        showClose: true,
+                        message: 'На вашу почту отправлен запрос на верификацию',
+                        type: 'warning'
+                        });
+                }
+                
+                
               }
         
   }

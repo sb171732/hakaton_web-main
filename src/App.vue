@@ -1,11 +1,13 @@
 <template>
    <div id="app">
-    <el-button type="text" v-if="user!=null">выход</el-button>
-    <!-- <el-menu class="nav" :default-active="activeIndex" router mode="horizontal">
-      <el-menu-item index="1" route="/admin/providers">Поставщики</el-menu-item>
-      <el-menu-item index="2" route="/admin/menu">Список товаров</el-menu-item>
-      
-    </el-menu> -->
+    <el-button type="text" @click="signout()" v-if="user!=null">выход</el-button>
+    <div v-if="user!=null" >
+      <el-menu v-if="user.emailVerified!=false" :default-active="$route.name" class="nav" router mode="horizontal">
+      <el-menu-item  index="admin" route="/admin">Меню</el-menu-item>
+      <el-menu-item index="menu" route="/admin/menu">Редактор меню</el-menu-item>
+      <el-menu-item index="orders" route="/admin/orders">Заказы</el-menu-item>
+      </el-menu>
+    </div>
         <router-view></router-view>
    </div>
 </template>
@@ -23,6 +25,29 @@ export default {
   computed:{
     user(){
       return store.state.user
+    }
+  },
+  methods:{
+    signout(){
+      store.dispatch('signout')
+      this.$router.push('/')
+    }
+  },
+  async created(){
+   const curr_user = await store.state.user
+   if (curr_user!=null) 
+      if(this.user.emailVerified!=true) {
+                this.$router.push('/verif')
+              } 
+        
+  },
+  watch:{
+    $route (to, from){
+        if (this.user==null){
+          this.$router.back
+        }   
+        console.log(to)
+        console.log(from)
     }
   }
 }

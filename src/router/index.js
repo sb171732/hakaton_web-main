@@ -1,21 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/LoginView.vue'
-import FoodProviders from '../views/FoodProviders.vue'
 import MainPage from '../views/MainPage.vue'
-
+import { store } from '../store'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
     name: 'MainPage',
-    component: MainPage
+    component: HomeView
   },
   {
     path: '/admin',
-    name: 'home',
-    component: HomeView
+    name: 'admin',
+    component: MainPage
   },
   {
     path: '/admin/menu',
@@ -23,14 +22,22 @@ const routes = [
     component: () => import( '../views/MenuView.vue')
   },
   {
-    path: '/admin/providers',
-    name: 'providers',
-    component: FoodProviders
+    path: '/verif',
+    name: 'verif',
+    component: () => import( '../views/EmailVerif.vue')
+  },
+  {
+    path: '/admin/orders',
+    name: 'orders',
+    component: () => import( '../views/OrderPage.vue')
   }
 ]
 
 const router = new VueRouter({
   routes
 })
-
+router.beforeEach((to, from, next) => {
+  if (to.path !== '/' && store.state.user==null) next({ path: '/' })
+  else next()
+})
 export default router
