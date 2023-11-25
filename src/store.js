@@ -77,6 +77,11 @@ export const store = new Vuex.Store({
             .collection('menu').doc(subdocID)
             .delete()
         }),
+        updateMenuModel: firestoreAction((context, {id, doc}) => {
+            db.collection('menu_model')
+                .doc(id)
+                .update(doc)
+        }),
         updateZag: firestoreAction((context, {id, doc}) => {
             db.collection('zagadki')
                 .doc(id)
