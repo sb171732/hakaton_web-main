@@ -5,7 +5,9 @@
       <el-menu v-if="user.emailVerified!=false" :default-active="$route.name" class="nav" router mode="horizontal">
       <el-menu-item  index="admin" route="/admin">Меню</el-menu-item>
       <el-menu-item index="menu" route="/admin/menu">Редактор меню</el-menu-item>
+      <el-menu-item index="menumodels" route="/admin/menumodels">Блюда</el-menu-item>
       <el-menu-item index="orders" route="/admin/orders">Заказы</el-menu-item>
+     
       </el-menu>
     </div>
         <router-view></router-view>
@@ -41,15 +43,7 @@ export default {
               } 
         
   },
-  watch:{
-    $route (to, from){
-        if (this.user==null){
-          this.$router.back
-        }   
-        console.log(to)
-        console.log(from)
-    }
-  }
+  
 }
 </script>
 

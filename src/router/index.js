@@ -25,11 +25,16 @@ const routes = [
     path: '/verif',
     name: 'verif',
     component: () => import( '../views/EmailVerif.vue')
-  },
-  {
+  }
+  ,{
     path: '/admin/orders',
     name: 'orders',
     component: () => import( '../views/OrderPage.vue')
+  }
+  ,{
+    path: '/admin/menumodels',
+    name: 'menumodels',
+    component: () => import( '../views/MenuModel.vue')
   }
 ]
 

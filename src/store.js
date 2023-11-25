@@ -13,7 +13,9 @@ export const store = new Vuex.Store({
         teachers:[],
         subCollection: [],
         menu:[],
+        menu_model:[],
         admin:[],
+        userList:[],
         user:null
     },
     mutations: {
@@ -23,6 +25,9 @@ export const store = new Vuex.Store({
           },
         SET_SubMenu(state, smenu) {
             state.subCollection = smenu
+          },
+        SET_USERS_LIST(state, userList) {
+            state.userList = userList
           }
     },
     actions: {
@@ -32,6 +37,9 @@ export const store = new Vuex.Store({
       }),
         bindAdmins: firestoreAction(({ bindFirestoreRef }) => {
             return bindFirestoreRef('admin', db.collection('admin'))
+        }), // 
+        bindMenuModel: firestoreAction(({ bindFirestoreRef }) => {
+            return bindFirestoreRef('menu_model', db.collection('menu_model'))
         }), // 
         bindMenu: firestoreAction(({ bindFirestoreRef }) => {
             return bindFirestoreRef('menu', db.collection('menu'))
@@ -52,11 +60,17 @@ export const store = new Vuex.Store({
         addMenu: firestoreAction((context, payload) => {
             return db.collection('menu').add(payload)
         }),
+        addMenuModel: firestoreAction((context, payload) => {
+            return db.collection('menu_model').add(payload)
+        }),
         saveR: firestoreAction((context, payload) => {
             return db.collection('rezult_zagadki').add(payload)
         }),
         delMenu: firestoreAction((context, payload) => {
             return db.collection('menu').doc(payload).delete()
+        }),
+        delMenuModel: firestoreAction((context, payload) => {
+            return db.collection('menu_model').doc(payload).delete()
         }),
         delSubMenu: firestoreAction((context, {docId, subdocID}) => {
             return db.collection('menu').doc(docId)
@@ -95,8 +109,17 @@ export const store = new Vuex.Store({
         ,
         async emailverif(){
           store.state.user.sendEmailVerification()
-        }
-        ,
+        },
+        getUsersList({ commit }) {
+          // Получить список пользователей Firebase Auth
+          fb.auth().listUsers().then((userList) => {
+            // Передать список пользователей в мутацию
+            commit('SET_USERS_LIST', userList);
+          }).catch((error) => {
+            console.log(error);
+          });
+        },
+        
         setUserRef: firebaseAction(({ bindFirebaseRef }, ref) => {
             bindFirebaseRef('user', ref)
           }),
@@ -130,5 +153,6 @@ export const store = new Vuex.Store({
 
 
 
-store.dispatch('bindAdmin')
+store.dispatch('bindMenuModel')
+// store.dispatch('bindAdmin')
 store.dispatch('bindMenu')
