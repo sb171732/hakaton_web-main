@@ -8,7 +8,8 @@ Vue.config.productionTip = false
 new Vue({
   router,
   created(){
-    store.dispatch('getLoginStatus')
+        store.dispatch('getLoginStatus')
   },
   render: h => h(App)
 }).$mount('#app')
+

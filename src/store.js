@@ -112,6 +112,7 @@ export const store = new Vuex.Store({
           fb.auth().signOut();
           store.commit('SET_USER',null)
         }
+        
         ,
         async emailverif(){
           store.state.user.sendEmailVerification()
