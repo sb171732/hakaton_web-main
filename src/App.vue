@@ -2,7 +2,8 @@
    <div id="app">
     <el-button type="text" @click="signout()" v-if="user!=null">выход</el-button>
     <div v-if="user!=null" >
-      <el-menu v-if="user.emailVerified!=false" :default-active="$route.name" class="nav" router mode="horizontal">
+      <el-menu v-if="user.emailVerified!=false" :default-active="$route.name" class="nav" router mode="horizontal" background-color="#545c64" text-color="#fff"
+  active-text-color="#ffd04b">
       <el-menu-item  index="admin" route="/admin">Меню</el-menu-item>
       <el-menu-item index="menu" route="/admin/menu">Редактор меню</el-menu-item>
       <el-menu-item index="menumodels" route="/admin/menumodels">Блюда</el-menu-item>

@@ -72,6 +72,7 @@ export default {
         drawer2:false,
         update_doc_id:'',
         new_menu_model:{
+          
           img_url:'',
           description:'',
           name:'',
@@ -79,6 +80,7 @@ export default {
           price:''
        },
         update_menu_model:{
+          
           img_url:'',
           description:'',
           name:'',

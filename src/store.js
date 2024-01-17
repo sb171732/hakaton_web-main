@@ -16,6 +16,7 @@ export const store = new Vuex.Store({
         menu_model:[],
         admin:[],
         userList:[],
+        orsersList:[],
         user:null
     },
     mutations: {
@@ -35,8 +36,8 @@ export const store = new Vuex.Store({
         // Replace 'collectionId' and 'subCollectionId' with your actual collection and sub-collection IDs respectively
         return bindFirestoreRef('subCollection', db.collection('menu').doc(payload).collection('menu'))
       }),
-        bindAdmins: firestoreAction(({ bindFirestoreRef }) => {
-            return bindFirestoreRef('admin', db.collection('admin'))
+        bindOrder: firestoreAction(({ bindFirestoreRef }) => {
+            return bindFirestoreRef('orderList', db.collection('orders'))
         }), // 
         bindMenuModel: firestoreAction(({ bindFirestoreRef }) => {
             return bindFirestoreRef('menu_model', db.collection('menu_model'))
@@ -159,5 +160,5 @@ export const store = new Vuex.Store({
 
 
 store.dispatch('bindMenuModel')
-// store.dispatch('bindAdmin')
+store.dispatch('bindOrder')
 store.dispatch('bindMenu')

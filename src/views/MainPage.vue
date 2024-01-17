@@ -7,7 +7,7 @@
             type="date"
             placeholder="Выбрать">
         </el-date-picker>
-        <div>
+        <div style="margin: auto;">
             <ul v-for="m in SubMenu" :key="m.id">
                 <el-card style="width: 500px;height: 200px;" :body-style="{ padding: '0px' }">
                     <!-- <img height="100px" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image"> -->
